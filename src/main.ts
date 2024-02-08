@@ -76,6 +76,7 @@ export async function run(actionInput: input.Input): Promise<void> {
         }
 
         const enriched: string = response.choices[0].message.content;
+        console.log(enriched);
 
         // Pipe to reviewdog ...
         process.env['REVIEWDOG_GITHUB_API_TOKEN'] = core.getInput('token');
