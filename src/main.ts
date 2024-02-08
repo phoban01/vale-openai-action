@@ -19,7 +19,7 @@ I want you to examine each entry in the data and consulting the markdown file po
 
 When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated.
 
-Your output should be raw json data with the addition of suggestions for each message in the input data.
+Your output should be raw jsonlines data with the addition of suggestions for each message in the input data.
 `;
 
 export async function run(actionInput: input.Input): Promise<void> {
