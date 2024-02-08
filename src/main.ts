@@ -56,6 +56,8 @@ export async function run(actionInput: input.Input): Promise<void> {
 
         const content = await fs.readFile(actionInput.path, err => {});
 
+        console.log(JSON.string(output.stdout));
+
         const response = await openai.chat.completions.create({
           model: "gpt-3.5-turbo-0125",
           response_format: { type: 'json_object'},
