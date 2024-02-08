@@ -46,10 +46,8 @@ export async function run(actionInput: input.Input): Promise<void> {
         const vale_code = output.exitCode;
         const should_fail = core.getInput('fail_on_error');
 
-        let content = await fs.readFile(actionInput.path, err => {});
-        content = content.replace(/(\r\n|\n|\r)/gm, ', ')
-          .replace(/,\s*$/, '')
-          .trim();
+        const content = await fs.readFile(actionInput.path, err => {});
+        console.log("CONTENT:", content)
 
         const data = output.stdout
           .replace(/(\r\n|\n|\r)/gm, ', ')
