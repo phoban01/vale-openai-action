@@ -52,7 +52,6 @@ export async function run(actionInput: input.Input): Promise<void> {
           .replace(/,\s*$/, '')
           .trim();
         const inputData = JSON.parse(`[${data}]`);
-        console.log("INPUT:", inputData);
 
         const response = await openai.chat.completions.create({
           model: 'gpt-4-turbo-preview',
@@ -81,15 +80,14 @@ export async function run(actionInput: input.Input): Promise<void> {
           return 1;
         }
 
-        console.log(JSON.stringify(response.choices[0].message.content));
-        const enriched: string = response.choices[0].message.content;
+        const enriched: string = JSON.parse(response.choices[0].message.content).data;
 
         // Pipe to reviewdog ...
         process.env['REVIEWDOG_GITHUB_API_TOKEN'] = core.getInput('token');
         return await exec.exec(
           actionInput.reviewdogPath,
           [
-            '-f=rdjsonl',
+            '-f=rdjson',
             `-name=vale`,
             `-reporter=${core.getInput('reporter')}`,
             `-fail-on-error=${should_fail}`,
@@ -100,7 +98,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           ],
           {
             cwd,
-            input: Buffer.from(JSON.stringify(JSON.parse(enriched)), 'utf-8'),
+            input: Buffer.from(JSON.stringify(enriched), 'utf-8'),
             ignoreReturnCode: true
           }
         );
