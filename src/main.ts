@@ -17,7 +17,7 @@ Here is the the schema of the jsonlines data:
 
 I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data.
 
-Your output should be the json lines data with the addition of the suggestions.
+Your output should be raw json data with the addition of suggestions.
 `;
 
 export async function run(actionInput: input.Input): Promise<void> {
