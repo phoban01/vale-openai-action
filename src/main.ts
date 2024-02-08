@@ -54,7 +54,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           messages: [
             {role: 'system', content: prompt},
             {role: 'user', content: `Here is the file: ${content}`},
-            {role: 'user', content: `Here is the data: ${output}`}
+            {role: 'user', content: `Here is the json data: ${output.stdout}`}
           ]
         });
 
