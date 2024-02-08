@@ -46,7 +46,7 @@ export async function run(actionInput: input.Input): Promise<void> {
         const vale_code = output.exitCode;
         const should_fail = core.getInput('fail_on_error');
 
-        const content = await fs.readFile(__dirname + "/" + actionInput.path, err => { if (err) { throw err; }});
+        const content = await fs.readFile(cwd + "/" + actionInput.path, err => { if (err) { throw err; }});
         console.log("CONTENT:", content)
 
         const data = output.stdout
