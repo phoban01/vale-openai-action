@@ -51,7 +51,6 @@ export async function run(actionInput: input.Input): Promise<void> {
           .replace(/(\r\n|\n|\r)/gm, ', ')
           .replace(/,\s*$/, '')
           .trim();
-        const inputData = JSON.parse(`[${data}]`);
 
         const response = await openai.chat.completions.create({
           model: 'gpt-4-turbo-preview',
@@ -64,7 +63,7 @@ export async function run(actionInput: input.Input): Promise<void> {
             },
             {
               role: "user",
-              content: `Here is the data: ${JSON.stringify(inputData)}. End of data. Please return in json format.`
+              content: `Here is the data: ${data}. End of data. Please return in jsonlines format with one line for each message.`
             }
           ]
         });
