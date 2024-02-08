@@ -56,9 +56,9 @@ export async function run(actionInput: input.Input): Promise<void> {
 
         const content = await fs.readFile(actionInput.path, err => {});
         
-        const data = output.stdout.replace(/(\r\n|\n|\r)/gm, ", ");
+        const data = output.stdout.replace(/(\r\n|\n|\r)/gm, ", ").replace(/,\s*$/,'').trim();
         console.log(data);
-        const inputData = JSON.parse(`[${data}]`)
+        const inputData = JSON.parse(`[${data}]`);
 
         console.log(inputData);
         const response = await openai.chat.completions.create({
