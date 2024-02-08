@@ -11,22 +11,12 @@ import OpenAI from 'openai';
  */
 const {GITHUB_WORKSPACE} = process.env;
 
-const prompt = `I am going to give you a markdown file and a json data set.
-Here is the schema of the json objects:
-'{"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}'.
-
-The input will contain an array of json objects, please process each one. 
-
-I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data.
-
-When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated. In many cases the column will be trucated by one, ensure this does not happen by checking what the output substitution would look like!
-
-Your output should be raw jsonlines data with the addition of suggestions for each message in the input data.
+const prompt = `
 `;
 
 export async function run(actionInput: input.Input): Promise<void> {
   const openai = new OpenAI({
-    apiKey: core.getInput('openai_api_key'),
+    apiKey: core.getInput('openai_api_key')
   });
   const Promise = require('bluebird');
   const fs = Promise.promisifyAll(require('fs'));
@@ -57,17 +47,49 @@ export async function run(actionInput: input.Input): Promise<void> {
         const should_fail = core.getInput('fail_on_error');
 
         const content = await fs.readFile(actionInput.path, err => {});
-        
-        const data = output.stdout.replace(/(\r\n|\n|\r)/gm, ", ").replace(/,\s*$/,'').trim();
+
+        const data = output.stdout
+          .replace(/(\r\n|\n|\r)/gm, ', ')
+          .replace(/,\s*$/, '')
+          .trim();
         const inputData = JSON.parse(`[${data}]`);
 
         const response = await openai.chat.completions.create({
-          model: "gpt-4-turbo-preview",
-          response_format: { type: 'json_object'},
+          model: 'gpt-4-turbo-preview',
+          response_format: {type: 'json_object'},
           messages: [
-            {role: 'system', content: prompt},
+            {
+              role: 'system',
+              content:
+                'I am going to give you a markdown file and a json data set.'
+            },
+            {
+              role: 'system',
+              content:
+                'Here is the schema of the json objects: {"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}.'
+            },
+            {
+              role: 'system',
+              content:
+                'I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data.'
+            },
+            {
+              role: 'system',
+              content:
+                'When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated. In many cases the column will be trucated by one, ensure this does not happen by checking what the output substitution would look like!'
+            },
+            {
+              role: 'system',
+              content:
+                'Your output should be raw jsonlines data with the addition of suggestions for each message in the input data.'
+            },
             {role: 'user', content: `Here is the file: ${content}`},
-            {role: 'user', content: `Here is the json data: ${JSON.stringify(inputData)}. Please return in jsonlines format.`}
+            {
+              role: 'user',
+              content: `Here is the json data: ${JSON.stringify(
+                inputData
+              )}. Please return in jsonlines format.`
+            }
           ]
         });
 

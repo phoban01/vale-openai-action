@@ -73,17 +73,21 @@ export async function get(tok: string, dir: string): Promise<Input> {
   version = version.split(' ').slice(-1)[0];
   logIfDebug(`Using Vale ${version}`);
 
-  const configPath = core.getInput("vale_ini_path");
+  const configPath = core.getInput('vale_ini_path');
 
   let stderr = '';
-  let resp = await exec.exec(localVale, [...parse(valeFlags), `--config=${configPath}`, 'sync'], {
-    cwd: dir,
-    listeners: {
-      stderr: (data: Buffer) => {
-        stderr += data.toString();
+  let resp = await exec.exec(
+    localVale,
+    [...parse(valeFlags), `--config=${configPath}`, 'sync'],
+    {
+      cwd: dir,
+      listeners: {
+        stderr: (data: Buffer) => {
+          stderr += data.toString();
+        }
       }
     }
-  });
+  );
 
   if (resp !== 0) {
     core.setFailed(stderr);
@@ -92,18 +96,17 @@ export async function get(tok: string, dir: string): Promise<Input> {
   let args: string[] = [
     `--output=${path.resolve(__dirname, 'rdjsonl.tmpl')}`,
     `--config=${configPath}`,
-    core.getInput("path"),
+    core.getInput('path')
   ];
 
   logIfDebug(`Vale set-up complete; using '${args}' with ${localReviewDog}.`);
-
 
   return {
     token: tok,
     workspace: dir,
     exePath: localVale,
     args: args,
-    path: core.getInput("path"),
+    path: core.getInput('path'),
     reviewdogPath: localReviewDog
   };
 }
