@@ -45,7 +45,7 @@ inputs:
     required: false
     default: "added"
 
-  value_ini_path:
+  vale_ini_path:
     description: "Path to the vale configuration file."
     required: false
     default: ".github/.vale.ini"
