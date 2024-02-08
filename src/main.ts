@@ -80,8 +80,9 @@ export async function run(actionInput: input.Input): Promise<void> {
           return 1;
         }
 
-        const enriched: string = JSON.parse(response.choices[0].message.content).data.map(JSON.stringify).join("\n");
-
+        const enriched = JSON.parse(response.choices[0].message.content).data;
+        console.log(enriched);
+        
         // Pipe to reviewdog ...
         process.env['REVIEWDOG_GITHUB_API_TOKEN'] = core.getInput('token');
         return await exec.exec(
@@ -98,7 +99,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           ],
           {
             cwd,
-            input: Buffer.from(enriched, 'utf-8'),
+            input: Buffer.from(enriched.map(JSON.stringify).join("\n"), 'utf-8'),
             ignoreReturnCode: true
           }
         );
