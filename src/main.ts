@@ -17,7 +17,7 @@ Here is the the schema of the jsonlines data:
 
 I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data.
 
-When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated.
+When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated. In many cases the column will be trucated by one, ensure this does not happen by checking what the output substitution would look like!
 
 Your output should be raw jsonlines data with the addition of suggestions for each message in the input data.
 `;
@@ -62,7 +62,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           messages: [
             {role: 'system', content: prompt},
             {role: 'user', content: `Here is the file: ${content}`},
-            {role: 'user', content: `Here is the json data: ${JSON.stringify(output.stdout)}`}
+            {role: 'user', content: `Here is the json data: ${JSON.stringify(output.stdout)}. Please return in jsonlines format.`}
           ]
         });
 
