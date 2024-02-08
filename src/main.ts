@@ -46,7 +46,7 @@ export async function run(actionInput: input.Input): Promise<void> {
         const vale_code = output.exitCode;
         const should_fail = core.getInput('fail_on_error');
 
-        const content = await fs.readFile(actionInput.path);
+        const content = await fs.readFile(actionInput.path, err => {});
 
         const response = await openai.chat.completions.create({
           model: 'gpt-3.5-turbo',
