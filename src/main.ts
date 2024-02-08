@@ -49,8 +49,8 @@ export async function run(actionInput: input.Input): Promise<void> {
         const content = await fs.readFile(actionInput.path, err => {});
 
         const response = await openai.chat.completions.create({
-          model: 'gpt-3.5-turbo',
-          response_format: {type: 'json_object'},
+          model: "gpt-3.5-turbo-0125",
+          response_format: { type: 'json_object'},
           messages: [
             {role: 'system', content: prompt},
             {role: 'user', content: `Here is the file: ${content}`},
