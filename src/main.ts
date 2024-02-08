@@ -55,16 +55,18 @@ export async function run(actionInput: input.Input): Promise<void> {
         const should_fail = core.getInput('fail_on_error');
 
         const content = await fs.readFile(actionInput.path, err => {});
+        
+        const data = output.stdout.replace(/(\r\n|\n|\r)/gm, ", ");
+        const inputData = JSON.parse(`[${data}]`)
 
-        console.log(JSON.stringify(output.stdout));
-
+        console.log(inputData);
         const response = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo-0125",
+          model: "gpt-4-preview",
           response_format: { type: 'json_object'},
           messages: [
             {role: 'system', content: prompt},
             {role: 'user', content: `Here is the file: ${content}`},
-            {role: 'user', content: `Here is the json data: ${JSON.stringify(output.stdout)}. Please return in jsonlines format.`}
+            {role: 'user', content: `Here is the json data: ${inputData}. Please return in jsonlines format.`}
           ]
         });
 
