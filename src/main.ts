@@ -15,7 +15,9 @@ const prompt =
   'I am going to give you a markdown file and a json data set. I want you to look at the line field in the json data set and create a suggested fix based on the content. You should return the json data set (in json format) with a suggested fix field added.';
 
 export async function run(actionInput: input.Input): Promise<void> {
-  const openai = new OpenAI();
+  const openai = new OpenAI({
+    apiKey: core.getInput('openai_api_key'),
+  });
   const Promise = require('bluebird');
   const fs = Promise.promisifyAll(require('fs'));
   const workdir = core.getInput('workdir') || '.';
@@ -46,7 +48,6 @@ export async function run(actionInput: input.Input): Promise<void> {
 
         const content = await fs.readFile(actionInput.path);
 
-        process.env['OPENAI_API_KEY'] = core.getInput('openai_api_key');
         const response = await openai.chat.completions.create({
           model: 'gpt-3.5-turbo',
           response_format: {type: 'json_object'},
