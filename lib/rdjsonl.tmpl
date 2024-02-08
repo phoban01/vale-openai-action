@@ -21,11 +21,12 @@
 
 {{- $line := printf "%d" .Line -}}
 {{- $col := printf "%d" (index .Span 0) -}}
+{{- $endCol := printf "%d" (index .Span 1) -}}
 {{- $check := printf "%s" .Check -}}
 {{- $message := printf "%s" .Message -}}
 
 {{- /* Output */ -}}
 
-{"message": "[{{ $check }}] {{ $message | jsonEscape }}", "location": {"path": "{{ $path }}", "range": {"start": {"line": {{ $line }}, "column": {{ $col }}}}}, "severity": "{{ $error }}"}
+{"message": "[{{ $check }}] {{ $message | jsonEscape }}", "location": {"path": "{{ $path }}", "range": {"start": {"line": {{ $line }}, "column": {{ $col }}}, "end": {"line": {{ $line }}, "column": {{ $endCol }}}}}, "severity": "{{ $error }}"}
 {{end -}}
 {{end -}}
