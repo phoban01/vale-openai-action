@@ -46,7 +46,7 @@ export async function run(actionInput: input.Input): Promise<void> {
         const vale_code = output.exitCode;
         const should_fail = core.getInput('fail_on_error');
 
-        const content = await fs.readFile(actionInput.path, err => {});
+        const content = await fs.readFile(__dirname + "/" + actionInput.path, err => { if (err) { throw err; }});
         console.log("CONTENT:", content)
 
         const data = output.stdout
@@ -66,7 +66,7 @@ export async function run(actionInput: input.Input): Promise<void> {
             },
             {
               role: "user",
-              content: `Here is the data: ${inputData}. End of data. Please return in json format.`
+              content: `Here is the data: ${JSON.stringify(inputData)}. End of data. Please return in json format.`
             }
           ]
         });
