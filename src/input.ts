@@ -29,6 +29,7 @@ export interface Input {
   exePath: string;
   reviewdogPath: string;
   path: string;
+  args: string[];
 }
 
 /**
@@ -86,19 +87,23 @@ export async function get(tok: string, dir: string): Promise<Input> {
     core.setFailed(stderr);
   }
 
+  const path = core.getInput("path");
+  const configPath = core.getInput("vale_ini_path");
+
   let args: string[] = [
-    `--output=${path.resolve(__dirname, 'rdjsonl.tmpl')}`,
-    ...parse(valeFlags)
+    `--output=JSON`,
+    `--config=${configPath}`,
+    path,
   ];
 
   logIfDebug(`Vale set-up complete; using '${args}' with ${localReviewDog}.`);
 
-  //TODO: check if path exists
 
   return {
     token: tok,
     workspace: dir,
     exePath: localVale,
+    args: args,
     path: core.getInput("path"),
     reviewdogPath: localReviewDog
   };

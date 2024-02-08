@@ -31,7 +31,7 @@ export async function run(actionInput: input.Input): Promise<void> {
         // Vale output ...
         const output = await exec.getExecOutput(
           actionInput.exePath,
-          [actionInput.path],
+          actionInput.args,
           {
             cwd,
             ignoreReturnCode: true,
