@@ -11,8 +11,14 @@ import OpenAI from 'openai';
  */
 const {GITHUB_WORKSPACE} = process.env;
 
-const prompt =
-  'I am going to give you a markdown file and a json data set. I want you to look at the line field in the json data set and create a suggested fix based on the content. You should return the json data set (in json format) with a suggested fix field added.';
+const prompt = `I am going to give you a markdown file and a json lines data set.
+Here is the the schema of the jsonlines data:
+{"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}
+
+I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data.
+
+Your output should be the json lines data with the addition of the suggestions.
+`;
 
 export async function run(actionInput: input.Input): Promise<void> {
   const openai = new OpenAI({

@@ -73,7 +73,6 @@ export async function get(tok: string, dir: string): Promise<Input> {
   version = version.split(' ').slice(-1)[0];
   logIfDebug(`Using Vale ${version}`);
 
-  const path = core.getInput("path");
   const configPath = core.getInput("vale_ini_path");
 
   let stderr = '';
@@ -91,9 +90,9 @@ export async function get(tok: string, dir: string): Promise<Input> {
   }
 
   let args: string[] = [
-    `--output=JSON`,
+    `--output=${path.resolve(__dirname, 'rdjsonl.tmpl')}`,
     `--config=${configPath}`,
-    path,
+    core.getInput("path"),
   ];
 
   logIfDebug(`Vale set-up complete; using '${args}' with ${localReviewDog}.`);
