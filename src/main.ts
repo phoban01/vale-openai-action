@@ -46,7 +46,10 @@ export async function run(actionInput: input.Input): Promise<void> {
         const vale_code = output.exitCode;
         const should_fail = core.getInput('fail_on_error');
 
-        const content = await fs.readFile(actionInput.path, err => {});
+        let content = await fs.readFile(actionInput.path, err => {});
+        content = content.replace(/(\r\n|\n|\r)/gm, ', ')
+          .replace(/,\s*$/, '')
+          .trim();
 
         const data = output.stdout
           .replace(/(\r\n|\n|\r)/gm, ', ')
@@ -61,11 +64,11 @@ export async function run(actionInput: input.Input): Promise<void> {
             {
               role: 'system',
               content:
-                `I am going to give you a markdown file and a json data set. Here is the schema of the json objects: {"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}. I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data. When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated. In many cases the column will be trucated by one, ensure this does not happen by checking what the output substitution would look like!. Here is the content: ${content}.`
+                `I am going to give you a markdown file and a json data set. Here is the schema of the json objects: {"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}. I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data. When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated. In many cases the column will be trucated by one, ensure this does not happen by checking what the output substitution would look like!. Here is the content: ${content}. End of content.`
             },
             {
               role: "user",
-              content: `Here is the data: ${inputData}. End of data. Please return in json format`
+              content: `Here is the data: ${inputData}. End of data. Please return in json format.`
             }
           ]
         });
