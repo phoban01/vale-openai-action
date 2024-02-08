@@ -62,7 +62,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           messages: [
             {role: 'system', content: prompt},
             {role: 'user', content: `Here is the file: ${content}`},
-            {role: 'user', content: `Here is the json data: ${JSON.stringify(JSON.parse(output.stdout))}`}
+            {role: 'user', content: `Here is the json data: ${JSON.stringify(output.stdout)}`}
           ]
         });
 
