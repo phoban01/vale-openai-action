@@ -31,10 +31,13 @@ export async function installLint(version: string): Promise<string> {
   return lintPath;
 }
 
-export async function installReviewDog(version: string, url?: string): Promise<string> {
+export async function installReviewDog(
+  version: string,
+  url?: string
+): Promise<string> {
   core.info(`Installing ReviewDog version '${version}' ...`);
-  
-  if (!url){
+
+  if (!url) {
     url = `https://github.com/reviewdog/reviewdog/releases/download/v${version}/reviewdog_${version}_Linux_x86_64.tar.gz`;
   }
 

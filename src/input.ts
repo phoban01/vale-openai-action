@@ -2,13 +2,11 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 import * as path from 'path';
-import { installLint, installReviewDog } from './install';
-
-
+import {installLint, installReviewDog} from './install';
 
 export function parse(flags: string): string[] {
   flags = flags.trim();
-  if (flags === "") {
+  if (flags === '') {
     return [];
   }
 
@@ -30,7 +28,7 @@ export interface Input {
   workspace: string;
   exePath: string;
   reviewdogPath: string;
-  args: string[];
+  path: string;
 }
 
 /**
@@ -58,8 +56,11 @@ export async function get(tok: string, dir: string): Promise<Input> {
   logIfDebug('`gem install asciidoctor --user-install` complete');
 
   const localVale = await installLint(core.getInput('version'));
-  const localReviewDog = await installReviewDog("0.17.0", core.getInput('reviewdog_url'));
-  const valeFlags = core.getInput("vale_flags");
+  const localReviewDog = await installReviewDog(
+    '0.17.0',
+    core.getInput('reviewdog_url')
+  );
+  const valeFlags = core.getInput('vale_flags');
 
   let version = '';
   await exec.exec(localVale, ['-v'], {
@@ -87,40 +88,18 @@ export async function get(tok: string, dir: string): Promise<Input> {
 
   let args: string[] = [
     `--output=${path.resolve(__dirname, 'rdjsonl.tmpl')}`,
-    ...parse(valeFlags),
+    ...parse(valeFlags)
   ];
 
-  // Figure out what we're supposed to lint:
-  const files = core.getInput('files');
-  const delim = core.getInput('separator');
-
-  if (files == 'all') {
-    args.push('.');
-  } else if (fs.existsSync(path.resolve(dir, files))) {
-    args.push(files);
-  } else if (delim !== "") {
-    args = args.concat(files.split(delim));
-  } else {
-    try {
-      // Support for an array of inputs.
-      //
-      // e.g., '[".github/workflows/main.yml"]'
-      args = args.concat(JSON.parse(files));
-    } catch (e) {
-      core.warning(
-        `User-specified path (${files}) is invalid; falling back to 'all'.`
-      );
-      args.push('.');
-    }
-  }
-
   logIfDebug(`Vale set-up complete; using '${args}' with ${localReviewDog}.`);
+
+  //TODO: check if path exists
 
   return {
     token: tok,
     workspace: dir,
     exePath: localVale,
-    args: args,
-    reviewdogPath: localReviewDog,
+    path: core.getInput("path"),
+    reviewdogPath: localReviewDog
   };
 }
