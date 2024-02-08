@@ -46,13 +46,13 @@ export async function run(actionInput: input.Input): Promise<void> {
         const should_fail = core.getInput('fail_on_error');
 
         const content = fs.readFileSync("/home/runner/work/vale-test/vale-test/" + actionInput.path, { encoding: 'utf8', flag: 'r'});
-        console.log("CONTENT:", content)
 
         const data = output.stdout
           .replace(/(\r\n|\n|\r)/gm, ', ')
           .replace(/,\s*$/, '')
           .trim();
         const inputData = JSON.parse(`[${data}]`);
+        console.log("INPUT:", inputData);
 
         const response = await openai.chat.completions.create({
           model: 'gpt-4-turbo-preview',
