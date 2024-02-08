@@ -67,7 +67,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           messages: [
             {role: 'system', content: prompt},
             {role: 'user', content: `Here is the file: ${content}`},
-            {role: 'user', content: `Here is the json data: ${inputData}. Please return in jsonlines format.`}
+            {role: 'user', content: `Here is the json data: ${JSON.stringify(inputData)}. Please return in jsonlines format.`}
           ]
         });
 
