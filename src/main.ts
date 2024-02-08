@@ -94,7 +94,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           ],
           {
             cwd,
-            input: Buffer.from(JSON.parse(enriched), 'utf-8'),
+            input: Buffer.from(JSON.stringify(JSON.parse(enriched)), 'utf-8'),
             ignoreReturnCode: true
           }
         );
