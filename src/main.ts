@@ -62,7 +62,7 @@ export async function run(actionInput: input.Input): Promise<void> {
 
         console.log(inputData);
         const response = await openai.chat.completions.create({
-          model: "gpt-4-preview",
+          model: "gpt-4-turbo-preview",
           response_format: { type: 'json_object'},
           messages: [
             {role: 'system', content: prompt},
