@@ -82,7 +82,15 @@ export async function run(actionInput: input.Input): Promise<void> {
               role: 'system',
               content: 'The output must be JSON.'
             },
-            {role: 'user', content: `Here is the file: ${content} and here is the json data: ${JSON.stringify(inputData)}. Please return in jsonlines format.` }
+            {
+              role: 'system',
+              content: `Here is the content: ${content}`
+            },
+            {
+              role: 'system',
+              content: `Here is the data: ${JSON.stringify(inputData)}. End of data.`
+            },
+            {role: 'user', content: `Please return in json format`},
           ]
         });
 
