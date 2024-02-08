@@ -80,7 +80,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           return 1;
         }
 
-        const enriched = JSON.parse(response.choices[0].message.content).data;
+        const enriched = JSON.parse(response.choices[0].message.content);
         console.log(enriched);
         
         // Pipe to reviewdog ...
