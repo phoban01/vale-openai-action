@@ -17,7 +17,7 @@ Here is the the schema of the jsonlines data:
 
 I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data.
 
-When calculating the end position for the suggestions you need to ensure it 
+When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated.
 
 Your output should be raw json data with the addition of suggestions for each message in the input data.
 `;
