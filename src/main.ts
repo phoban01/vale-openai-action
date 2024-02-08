@@ -11,9 +11,11 @@ import OpenAI from 'openai';
  */
 const {GITHUB_WORKSPACE} = process.env;
 
-const prompt = `I am going to give you a markdown file and a json lines data set.
-Here is the the schema of the jsonlines data:
-{"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}
+const prompt = `I am going to give you a markdown file and a json data set.
+Here is the schema of the json objects:
+'{"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}'.
+
+The input will contain an array of json objects, please process each one. 
 
 I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data.
 
@@ -57,10 +59,8 @@ export async function run(actionInput: input.Input): Promise<void> {
         const content = await fs.readFile(actionInput.path, err => {});
         
         const data = output.stdout.replace(/(\r\n|\n|\r)/gm, ", ").replace(/,\s*$/,'').trim();
-        console.log(data);
         const inputData = JSON.parse(`[${data}]`);
 
-        console.log(inputData);
         const response = await openai.chat.completions.create({
           model: "gpt-4-turbo-preview",
           response_format: { type: 'json_object'},
