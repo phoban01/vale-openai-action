@@ -56,7 +56,7 @@ export async function run(actionInput: input.Input): Promise<void> {
 
         let result: string[] = [];
 
-        inputData.array.forEach(async element => {
+        inputData.forEach(async element => {
           const response = await openai.chat.completions.create({
             model: 'gpt-4-turbo-preview',
             response_format: {type: 'json_object'},
