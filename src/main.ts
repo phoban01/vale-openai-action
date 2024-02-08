@@ -105,7 +105,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           return 1;
         }
 
-        console.log(JSON.stringify(response.choices[0].message));
+        console.log(JSON.parse(response.choices[0].message.content));
         const enriched: string = response.choices[0].message.content;
 
         // Pipe to reviewdog ...
