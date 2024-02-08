@@ -111,6 +111,8 @@ export async function run(actionInput: input.Input): Promise<void> {
           result.push(JSON.stringify(response.choices[0].message.content));
         });
 
+        console.log(result.join(","))
+
         // Pipe to reviewdog ...
         process.env['REVIEWDOG_GITHUB_API_TOKEN'] = core.getInput('token');
         return await exec.exec(
