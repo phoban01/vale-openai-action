@@ -57,6 +57,7 @@ export async function run(actionInput: input.Input): Promise<void> {
         const content = await fs.readFile(actionInput.path, err => {});
         
         const data = output.stdout.replace(/(\r\n|\n|\r)/gm, ", ");
+        console.log(data);
         const inputData = JSON.parse(`[${data}]`)
 
         console.log(inputData);
