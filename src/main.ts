@@ -88,7 +88,7 @@ export async function run(actionInput: input.Input): Promise<void> {
             },
             {
               role: 'system',
-              content: `Here is the data: ${JSON.stringify(inputData)}. End of data.`
+              content: `Here is the data: ${JSON.parse(inputData)}. End of data.`
             },
             {role: 'user', content: `Please return in json format`},
           ]
