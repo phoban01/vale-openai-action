@@ -73,8 +73,11 @@ export async function get(tok: string, dir: string): Promise<Input> {
   version = version.split(' ').slice(-1)[0];
   logIfDebug(`Using Vale ${version}`);
 
+  const path = core.getInput("path");
+  const configPath = core.getInput("vale_ini_path");
+
   let stderr = '';
-  let resp = await exec.exec(localVale, [...parse(valeFlags), 'sync'], {
+  let resp = await exec.exec(localVale, [...parse(valeFlags), `--config=${configPath}`, 'sync'], {
     cwd: dir,
     listeners: {
       stderr: (data: Buffer) => {
@@ -86,9 +89,6 @@ export async function get(tok: string, dir: string): Promise<Input> {
   if (resp !== 0) {
     core.setFailed(stderr);
   }
-
-  const path = core.getInput("path");
-  const configPath = core.getInput("vale_ini_path");
 
   let args: string[] = [
     `--output=JSON`,
