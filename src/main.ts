@@ -80,8 +80,7 @@ export async function run(actionInput: input.Input): Promise<void> {
             },
             {
               role: 'system',
-              content:
-                'Your output should be raw jsonlines data with the addition of suggestions for each message in the input data.'
+              content: 'The output must be JSON.'
             },
             {role: 'user', content: `Here is the file: ${content} and here is the json data: ${JSON.stringify(inputData)}. Please return in jsonlines format.` }
           ]
