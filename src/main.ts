@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as input from './input';
 import OpenAI from 'openai';
@@ -18,8 +19,6 @@ export async function run(actionInput: input.Input): Promise<void> {
   const openai = new OpenAI({
     apiKey: core.getInput('openai_api_key')
   });
-  const Promise = require('bluebird');
-  const fs = Promise.promisifyAll(require('fs'));
   const workdir = core.getInput('workdir') || '.';
   const cwd = path.relative(
     process.env['GITHUB_WORKSPACE'] || process.cwd(),
@@ -46,7 +45,7 @@ export async function run(actionInput: input.Input): Promise<void> {
         const vale_code = output.exitCode;
         const should_fail = core.getInput('fail_on_error');
 
-        const content = await fs.readFile("/home/runner/work/vale-test/vale-test/" + actionInput.path, err => { if (err) { throw err; }});
+        const content = fs.readFileSync("/home/runner/work/vale-test/vale-test/" + actionInput.path, { encoding: 'utf8', flag: 'r'});
         console.log("CONTENT:", content)
 
         const data = output.stdout
