@@ -51,10 +51,10 @@ export async function run(actionInput: input.Input): Promise<void> {
 
         const content = fs.readFileSync("/home/runner/work/vale-test/vale-test/" + actionInput.path, { encoding: 'utf8', flag: 'r'});
 
-        const data = output.stdout
+        const data = JSON.parse(output.stdout
           .replace(/(\r\n|\n|\r)/gm, ',')
           .replace(/,\s*$/, '')
-          .trim();
+          .trim());
 
         console.log(data);
 
