@@ -15,6 +15,10 @@ const {GITHUB_WORKSPACE} = process.env;
 const prompt = `
 `;
 
+function systemPrompt(content: string): string {
+      return `I am going to give you a markdown file and a json data set. Here is the schema of the json objects: {"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}. I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data. When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated. In many cases the column will be trucated by one, ensure this does not happen by checking what the output substitution would look like!. Here is the content: ${content}. End of content.`
+}
+
 export async function run(actionInput: input.Input): Promise<void> {
   const openai = new OpenAI({
     apiKey: core.getInput('openai_api_key')
@@ -54,12 +58,12 @@ export async function run(actionInput: input.Input): Promise<void> {
 
         const response = await openai.chat.completions.create({
           model: 'gpt-4-turbo-preview',
+          n: 2,
           response_format: {type: 'json_object'},
           messages: [
             {
               role: 'system',
-              content:
-                `I am going to give you a markdown file and a json data set. Here is the schema of the json objects: {"message": "<msg>", "location": {"path": "<file path>", "range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}}, "suggestions": [{"range": {"start": {"line": 14, "column": 15}, "end": {"line": 14, "column": 18}}, "text": "<replacement text>"}], "severity": "WARNING"}. I want you to examine each entry in the data and consulting the markdown file populate the suggestions entries where there is an obvious fix based on the data. When calculating the end position for the suggestions you need to ensure it matches the columns correctly. Please tweak the end column in suggestions to ensure letters are not being repeated. In many cases the column will be trucated by one, ensure this does not happen by checking what the output substitution would look like!. Here is the content: ${content}. End of content.`
+              content: systemPrompt(content),
             },
             {
               role: "user",
@@ -67,6 +71,8 @@ export async function run(actionInput: input.Input): Promise<void> {
             }
           ]
         });
+
+        console.log(response);
 
         if (
           !(
@@ -134,3 +140,5 @@ async function main(): Promise<void> {
 }
 
 main();
+
+
