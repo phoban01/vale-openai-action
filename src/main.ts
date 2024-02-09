@@ -72,7 +72,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           ]
         });
 
-        console.log(response);
+        console.log(JSON.stringify(response));
 
         if (
           !(
