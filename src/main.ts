@@ -57,7 +57,7 @@ export async function run(actionInput: input.Input): Promise<void> {
           .trim();
 
         const response = await openai.chat.completions.create({
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-3.5-turbo-0125',
           response_format: {type: 'json_object'},
           messages: [
             {
